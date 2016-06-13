@@ -1,4 +1,5 @@
 This project is designed with armips.exe at the center, and will eventually include grit to compile images.
+If you have questions even after you've read the whole thing, go to #PokemonClover on Rizon and pester NewDenverCity about it.
 
 HOW TO CONTRIBUTE
 1) Create a GitHub account.
@@ -40,3 +41,28 @@ Defines will usually use either macros or equs.
     define equ 0x1
 
 .thumb is required at the top of every .asm file, and .close is needed at the end of every .asm file.
+
+DATA TYPES
+byte: 8 bits.
+hword: 16 bits. Also known as a halfword.
+word: 32 bits.
+short = hword
+long = word
+Pointers are words, for example.
+
+VARIOUS USES FOR THE HOOKS FILE
+Obviously used for ASM hooks.
+However, it is also used for other things. The free space in the ROM starts at roughly 0x85A3D8(subject to change based on music and maps), so that's where all of the compiled stuff will be going. Anything before that will be included in hooks.asm.
+The most common use for this will probably be moveset updates or bug fixes. It's also going to be used for pointers to pictures and stuff as well.
+    Moveset editing sub-tutorial:
+        1) Apply base.ips to clover.gba, but don't compile the project yet. Copy clover.gba and paste that under a different name.
+        2) Edit the movesets like you normally would.
+        3) Compare clover.gba and its edited copy in HxD or another hex editor.
+        4) Odds are you're seeing two changes if you've repointed the moveset. The first is a pointer to the second, and the second change is the new moveset.
+        5) Open up hooks.asm and add a .org with the offset of the pointer, not the offset that the pointer, well, points to.
+        6) Write a unique label under the .org. Add .word under that, and then another unique label following that. Here's what it'd look like as an example for Grasshole.
+            .org 0xXXXXXX
+            grassholemovesetpointer:
+            .word grassholemoveset
+        7) Go to misc.asm and add the second unique label you wanted. Add a bunch of .bytes with whatever you found under the second difference, and then reread HOW TO CONTRIBUTE from step two.
+The moveset editing sub-tutorial can be applied to a lot of things, but the general process still works.
