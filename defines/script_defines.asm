@@ -2,70 +2,59 @@
 ; All scripting macros off of XSE and http://sphericalice.com/romhacking/documents/script/index.html
 
 ; Comparing stuff for if1 and if2
-.equ lessthan, 0x0 @A is less than B
-.equ equal, 0x1 @A is equal to B
-.equ greaterthan, 0x2 @A is more than B
-.equ lessorequal, 0x3 @A is less than or equal to B
-.equ greaterorequal, 0x4 @A is greater than or equal to B
-.equ notequal, 0x5 @A is not equal to B
+.equ lessthan,       0 @ A is less than B
+.equ equal,          1 @ A is equal to B
+.equ greaterthan,    2 @ A is more than B
+.equ lessorequal,    3 @ A is less than or equal to B
+.equ greaterorequal, 4 @ A is greater than or equal to B
+.equ notequal,       5 @ A is not equal to B
 
 ; Macro macros, from XSE.
-.macro msgbox msgbox_pointer msgbox_type
-.byte 0xF
-.byte 0x0
-.word \msgbox_pointer
-.byte 0x9
-.byte \msgbox_type
+.macro msgbox address type
+	loadpointer 0, \address
+	callstd \type
 .endmacro
 
-.macro giveitem giveitem_item giveitem_amount giveitem_msgtype
-.byte 0x1A
-.hword 0x8000
-.hword \giveitem_item
-.byte 0x1A
-.hword 0x8001
-.hword \giveitem_amount
-.byte 0x9
-.byte \giveitem_msgtype
+.macro giveitem item amount msgtype
+	copyvarifnotzero 0x8000, \item
+	copyvarifnotzero 0x8001, \amount
+	callstd \msgtype
 .endmacro
 
-.macro giveitem2 giveitem2_item giveitem2_amount giveitem2_song
-.byte 0x1A
-.hword 0x8000
-.hword \giveitem2_item
-.byte 0x1A
-.hword 0x8001
-.hword \giveitem2_amount
-.byte 0x1A
-.hword 0x8002
-.hword \giveitem2_song
-.byte 0x9
-.byte 0x9
+.macro giveitem2 item amount song
+	copyvarifnotzero 0x8000, \item
+	copyvarifnotzero 0x8001, \amount
+	copyvarifnotzero 0x8002, \song
+	callstd 9
 .endmacro
 
-.macro giveitem3 giveitem3_decoration
-.byte 0x1A
-.word 0x8000
-.hword \giveitem3_decoration
-.byte 0x9
-.byte 0x7
+.macro giveitem3 decoration
+	copyvarifnotzero 0x8000, \decoration
+	callstd 7
 .endmacro
 
-.macro wildbattle wildbattle_species wildbattle_level wildbattle_item
-.byte 0xB6
-.hword \wildbattle_species
-.byte \wildbattle_level
-.hword \wildbattle_item
-.byte 0xB7
+.macro wildbattle species level item
+	setwildbattle \species, \level, \item
+	dowildbattle
 .endmacro
 
-.macro registernav registernav_trainer
-.byte 0x1A
-.hword 0x8000
-.hword \registernav_trainer
-.byte 0x9
-.byte 0x8
+.macro registernav trainer
+	copyvarifnotzero 0x8000, \trainer
+	callstd 8
 .endmacro
+
+
+; padz macros
+
+.macro switch var
+	copyvar 0x8000, \var
+.endmacro
+
+.macro case value address
+	compare 0x8000, \value
+	if1 1, \address
+.endmacro
+
 
 ; Commands
 .macro nop
