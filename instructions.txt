@@ -30,6 +30,7 @@ Instead of #org for scripts, use this style;
     
     label:
     return
+
 Defines will usually use either macros or equs.
     ; macro syntax
     .macro thing thing_param1
@@ -39,6 +40,11 @@ Defines will usually use either macros or equs.
 
     ; equ syntax
     define equ 0x1
+
+To use pokeascii, use .include "./defines/ascii.asm"
+You need to use pokeascii like this;
+    .byte E_, x_, a_, m_, p_, l_, e_, Period
+This is due to certain letters being equivalent to numbers.
 
 .thumb is required at the top of every .asm file, and .close is needed at the end of every .asm file.
 
