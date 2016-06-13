@@ -167,7 +167,7 @@ Glassannon equ 0xA4
 Fluffyeti equ 0xA5
 Yedoom equ 0xA6
 Mirrostine equ 0xA7
-Mudpands equ 0xA8
+Mudpants equ 0xA8
 Mudslacks equ 0xA9
 Bukitlee equ 0xAA
 Lossolith equ 0xAB
@@ -180,7 +180,7 @@ Nomaestro equ 0xB1
 Dunkypea equ 0xB2
 Burdmen equ 0xB3
 Nutzboltz equ 0xB4
-Kukluck equ 0xB5
+Kuklux equ 0xB5
 Kuklan equ 0xB6
 Flameboyan equ 0xB7
 Piicee equ 0xB8
@@ -227,7 +227,7 @@ Pollefin equ 0xE0
 Florigrace equ 0xE1
 Lasslee equ 0xE2
 Wifemin equ 0xE3
-Ewotto equ 0xE4
+Uwotto equ 0xE4
 Venowatt equ 0xE5
 Vaultevour equ 0xE6
 Semdemen equ 0xE7
