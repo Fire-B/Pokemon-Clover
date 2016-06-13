@@ -1,5 +1,12 @@
 This project is designed with armips.exe at the center, and will eventually include grit to compile images.
 
+HOW TO CONTRIBUTE
+1) Create a GitHub account.
+2) Go to this repository, then fork.
+3) Make changes.
+4) Make pull request to this repository. Add comments as to what you did or I'll ignore it.
+5) I'll look it over and accept it as I see fit.
+
 HOW TO COMPILE STUFF
 1) Download a .zip of the repository and extract it. It'll automatically be named Pokemon-Clover-master.
 2) Put a CLEAN FireRed ROM in the main folder, and name it clover.gba.
@@ -14,6 +21,7 @@ Scripts that use our script_defines.asm file should be put in a folder called sc
 
 ASM AND SCRIPT STYLE
 Comments are added through ;
+Labels can only be defined once, and .orgs MUST be in order.
 Instead of #org for scripts, use this style;
     start:
     call label
@@ -21,4 +29,14 @@ Instead of #org for scripts, use this style;
     
     label:
     return
-.thumb is required at the top of every .asm file.
+Defines will usually use either macros or equs.
+    ; macro syntax
+    .macro thing thing_param1
+    .byte 0x0
+    .byte \thing_param1
+    .endmacro
+
+    ; equ syntax
+    define equ 0x1
+
+.thumb is required at the top of every .asm file, and .close is needed at the end of every .asm file.
