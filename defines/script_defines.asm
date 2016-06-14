@@ -1,4 +1,3 @@
-.thumb
 ; All scripting macros off of XSE and http://sphericalice.com/romhacking/documents/script/index.html
 
 ; Comparing stuff for if1 and if2
@@ -10,36 +9,42 @@ greaterorequal equ 4 ; A is greater than or equal to B
 notequal       equ 5 ; A is not equal to B
 
 ; Macro macros, from XSE.
+
+.macro msg, address
+	loadpointer 0, address
+	callstd 0
+.endmacro
+
 .macro msgbox, address, type
-	loadpointer 0, \address
-	callstd \type
+	loadpointer 0, address
+	callstd type
 .endmacro
 
 .macro giveitem, item, amount, msgtype
-	copyvarifnotzero 0x8000, \item
-	copyvarifnotzero 0x8001, \amount
-	callstd \msgtype
+	copyvarifnotzero 0x8000, item
+	copyvarifnotzero 0x8001, amount
+	callstd msgtype
 .endmacro
 
 .macro giveitem2, item, amount, song
-	copyvarifnotzero 0x8000, \item
-	copyvarifnotzero 0x8001, \amount
-	copyvarifnotzero 0x8002, \song
+	copyvarifnotzero 0x8000, item
+	copyvarifnotzero 0x8001, amount
+	copyvarifnotzero 0x8002, song
 	callstd 9
 .endmacro
 
 .macro giveitem3, decoration
-	copyvarifnotzero 0x8000, \decoration
+	copyvarifnotzero 0x8000, decoration
 	callstd 7
 .endmacro
 
 .macro wildbattle, species, level, item
-	setwildbattle \species, \level, \item
+	setwildbattle species, level, item
 	dowildbattle
 .endmacro
 
 .macro registernav, trainer
-	copyvarifnotzero 0x8000, \trainer
+	copyvarifnotzero 0x8000, trainer
 	callstd 8
 .endmacro
 
@@ -47,12 +52,12 @@ notequal       equ 5 ; A is not equal to B
 ; padz macros
 
 .macro switch, var
-	copyvar 0x8000, \var
+	copyvar 0x8000, var
 .endmacro
 
 .macro case, value, address
-	compare 0x8000, \value
-	if1 1, \address
+	compare 0x8000, value
+	if1 1, address
 .endmacro
 
 
@@ -73,48 +78,48 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0x3
 .endmacro
 
-.macro call, call_destination
+.macro call, dest
 	.byte 0x4
-	.word \call_destination
+	.word dest
 .endmacro
 
-.macro goto, goto_destination
+.macro goto, destination
 	.byte 0x5
-	.word \goto_destination
+	.word destination
 .endmacro
 
-.macro if1, if1_condition, if1_goto_destination
+.macro if1, condition, destination
 	.byte 0x6
-	.byte \if1_condition
-	.word \if1_goto_destination
+	.byte condition
+	.word destination
 .endmacro
 
-.macro if2, if2_condition, if2_call_destination
+.macro if2, condition, destination
 	.byte 0x7
-	.byte \if2_condition
-	.word \if2_call_destination
+	.byte condition
+	.word destination
 .endmacro
 
-.macro gotostd, gotostd_param1
+.macro gotostd, param1
 	.byte 0x8
-	.byte \gotostd_param1
+	.byte param1
 .endmacro
 
-.macro callstd, callstd_param1
+.macro callstd, std
 	.byte 0x9
-	.byte \callstd_param1
+	.byte std
 .endmacro
 
-.macro gotostdif, gotostdif_cond, gotostdif_param1
+.macro gotostdif, cond, param1
 	.byte 0xA
-	.byte \gotostdif_cond
-	.byte \gotostdif_param1
+	.byte cond
+	.byte param1
 .endmacro
 
-.macro callstdif, callstdif_cond, callstdif_param1
+.macro callstdif, cond, param1
 	.byte 0xB
-	.byte \callstdif_cond
-	.byte \callstdif_param1
+	.byte cond
+	.byte param1
 .endmacro
 
 ; jumpram's documentation may not be complete
@@ -126,174 +131,174 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0xD
 .endmacro
 
-.macro setbyte, setbyte_value
+.macro setbyte, value
 	.byte 0xE
-	.byte \setbyte_value
+	.byte value
 .endmacro
 
-.macro loadpointer, loadpointer_bank, loadpointer_pointer
+.macro loadpointer, bank, address
 	.byte 0xF
-	.byte \loadpointer_bank
-	.word \loadpointer_pointer
+	.byte bank
+	.word address
 .endmacro
 
-.macro setbyte2, setbyte2_bank, setbyte2_value
+.macro setbyte2, bank, value
 	.byte 0x10
-	.byte \setbyte2_bank
-	.byte \setbyte2_value
+	.byte bank
+	.byte value
 .endmacro
 
-.macro writebytetooffset, wbto_byte, wbto_pointer
+.macro writebytetooffset, byte, pointer
 	.byte 0x11
-	.byte \wbto_byte
-	.word \wbto_pointer
+	.byte byte
+	.word pointer
 .endmacro
 
-.macro loadbytefrompointer, lbfp_bank_dest, lbfp_pointer
+.macro loadbytefrompointer, bank_dest, pointer
 	.byte 0x12
-	.byte \lbfp_bank_dest
-	.word \lbfp_pointer
+	.byte bank_dest
+	.word pointer
 .endmacro
 
-.macro setfarbyte, setfarbyte_bank, setfarbyte_pointer
+.macro setfarbyte, bank, pointer
 	.byte 0x13
-	.byte \setfarbyte_bank
-	.word \setfarbyte_pointer
+	.byte bank
+	.word pointer
 .endmacro
 
-.macro copyscriptbanks, copyscriptbanks_bank_destination, copyscriptbanks_bank_source
+.macro copyscriptbanks, bank_destination, bank_source
 	.byte 0x14
-	.byte \copyscriptbanks_bank_destination
-	.byte \copyscriptbanks_bank_source
+	.byte bank_destination
+	.byte bank_source
 .endmacro
 
-.macro copybyte, copybyte_dest, copybyte_source
+.macro copybyte, dest, source
 	.byte 0x15
-	.word \copybyte_dest
-	.word \copybyte_source
+	.word dest
+	.word source
 .endmacro
 
-.macro setvar, setvar_var, setvar_value
+.macro setvar, var, value
 	.byte 0x16
-	.hword \setvar_var
-	.hword \setvar_value
+	.hword var
+	.hword value
 .endmacro
 
-.macro addvar, addvar_var, addvar_value
+.macro addvar, var, value
 	.byte 0x17
-	.hword \addvar_var
-	.hword \addvar_value
+	.hword var
+	.hword value
 .endmacro
 
-.macro subvar, subvar_var, subvar_value
+.macro subvar, var, value
 	.byte 0x18
-	.hword \subvar_var
-	.hword \subvar_value
+	.hword var
+	.hword value
 .endmacro
 
-.macro copyvar, copyvar_destination, copyvar_source
+.macro copyvar, destination, source
 	.byte 0x19
-	.hword \copyvar_destination
-	.hword \copyvar_source
+	.hword destination
+	.hword source
 .endmacro
 
-.macro copyvarifnotzero, copyvarifnotzero_var, copyvarifnotzero_source
+.macro copyvarifnotzero, var, source
 	.byte 0x1A
-	.hword \copyvarifnotzero_var
-	.hword \copyvarifnotzero_source
+	.hword var
+	.hword source
 .endmacro
 
-.macro comparebanks, comparebanks_a, comparebanks_b
+.macro comparebanks, a, b
 	.byte 0x1B
-	.byte \comparebanks_a
-	.byte \comparebanks_b
+	.byte a
+	.byte b
 .endmacro
 
-.macro comparebanktobyte, comparebanktobyte_bank, comparebanktobyte_byte
+.macro comparebanktobyte, bank, byte
 	.byte 0x1C
-	.byte \comparebanktobyte_bank
-	.byte \comparebanktobyte_byte
+	.byte bank
+	.byte byte
 .endmacro
 
-.macro comparebanktofarbyte, comparebbanktofarbyte_bank, comparebanktofarbyte_pointer
+.macro comparebanktofarbyte, comparebbanktofarbyte_bank, pointer
 	.byte 0x1D
-	.byte \comparebanktofarbyte_bank
-	.word \comparebanktofarbyte_pointer
+	.byte bank
+	.word pointer
 .endmacro
 
-.macro comparefarbytetobank, comparefarbytetobank_pointer, comparefarbytetobank_bank
+.macro comparefarbytetobank, pointer, bank
 	.byte 0x1E
-	.word \comparefarbytetobank_pointer
-	.byte \comparefarbytetobank_bank
+	.word pointer
+	.byte bank
 .endmacro
 
-.macro comparefarbytetobyte, comparefarbytetobyte_pointer, comparefarbytetobyte_byte
+.macro comparefarbytetobyte, pointer, byte
 	.byte 0x1F
-	.word \comparefarbytetobyte_pointer
-	.byte \comparefarbytetobyte_byte
+	.word pointer
+	.byte byte
 .endmacro
 
-.macro comparefarbytes, comparefarbytes_param1, comparefarbytes_param2
+.macro comparefarbytes, param1, param2
 	.byte 0x20
-	.word \comparefarbytes_param1
-	.word \comparefarbytes_param2
+	.word param1
+	.word param2
 .endmacro
 
-.macro compare, compare_var, compare_value
+.macro compare, var, value
 	.byte 0x21
-	.hword \compare_var
-	.hword \compare_value
+	.hword var
+	.hword value
 .endmacro
 
-.macro comparevars, comparevars_var1, comparevars_var2
+.macro comparevars, var1, var2
 	.byte 0x22
-	.hword \comparevars_var1
-	.hword \comparevars_var2
+	.hword var1
+	.hword var2
 .endmacro
 
-.macro callasm, callasm_pointer
+.macro callasm, pointer
 	.byte 0x23
-	.word \callasm_pointer
+	.word pointer
 .endmacro
 
-.macro cmd24, cmd24_pointer
+.macro cmd24, pointer
 	.byte 0x24
-	.word \cmd24_pointer
+	.word pointer
 .endmacro
 
-.macro special, special_param
+.macro special, param
 	.byte 0x25
-	.hword \special_param
+	.hword param
 .endmacro
 
-.macro special2, special2_outputvar, special2_function
+.macro special2, outputvar, function
 	.byte 0x26
-	.hword \special2_outputvar
-	.hword \special2_function
+	.hword outputvar
+	.hword function
 .endmacro
 
 .macro waitstate
 	.byte 0x27
 .endmacro
 
-.macro pause, pause_time
+.macro pause, time
 	.byte 0x28
-	.hword \pause_time
+	.hword time
 .endmacro
 
-.macro setflag, setflag_flag
+.macro setflag, flag
 	.byte 0x29
-	.hword \setflag_flag
+	.hword flag
 .endmacro
 
-.macro clearflag, clearflag_flag
+.macro clearflag, flag
 	.byte 0x2A
-	.hword \clearflag_flag
+	.hword flag
 .endmacro
 
-.macro checkflag, checkflag_flag
+.macro checkflag, flag
 	.byte 0x2B
-	.hword \checkflag_flag
+	.hword flag
 .endmacro
 
 ; nop in FR
@@ -310,338 +315,338 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0x2E
 .endmacro
 
-.macro sound, sound_id
+.macro sound, id
 	.byte 0x2F
-	.hword \sound_id
+	.hword id
 .endmacro
 
 .macro checksound
 	.byte 0x30
 .endmacro
 
-.macro fanfare, fanfare_id
+.macro fanfare, id
 	.byte 0x31
-	.hword \fanfare_id
+	.hword id
 .endmacro
 
 .macro waitfanfare
 	.byte 0x32
 .endmacro
 
-.macro playsong, playsong_songid, playsong_unknown
+.macro playsong, songid, unknown
 	.byte 0x33
-	.hword \playsong_songid
-	.byte \playsong_unknown
+	.hword songid
+	.byte unknown
 .endmacro
 
-.macro playsong2, playsong2_song
+.macro playsong2, song
 	.byte 0x34
-	.hword \playsong2_song
+	.hword song
 .endmacro
 
 .macro fadedefault
 	.byte 0x35
 .endmacro
 
-.macro fadesong, fadesong_song
+.macro fadesong, song
 	.byte 0x36
-	.hword \fadesong_song
+	.hword song
 .endmacro
 
-.macro fadeout, fadeout_speed
+.macro fadeout, speed
 	.byte 0x37
-	.byte \fadeout_speed
+	.byte speed
 .endmacro
 
-.macro fadein, fadein_speed
+.macro fadein, speed
 	.byte 0x38
-	.byte \fadein_speed
+	.byte speed
 .endmacro
 
-.macro warp, warp_bank, warp_map, warp_warp, warp_x_axis, warp_y_axis
+.macro warp, bank, map, warp, x_axis, y_axis
 	.byte 0x39
-	.byte \warp_bank
-	.byte \warp_map
-	.byte \warp_warp
-	.hword \warp_x_axis
-	.hword \warp_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro warpmuted, warpmuted_bank, warpmuted_map, warpmuted_warp, warpmuted_x_axis, warpmuted_y_axis
+.macro warpmuted, bank, map, warp, x_axis, y_axis
 	.byte 0x3A
-	.byte \warpmuted_bank
-	.byte \warpmuted_map
-	.byte \warpmuted_warp
-	.hword \warpmuted_x_axis
-	.hword \warpmuted_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro warpwalk, warpwalk_bank, warpwalk_map, warpwalk_warp, warpwalk_x_axis, warpwalk_y_axis
+.macro warpwalk, bank, map, warp, x_axis, y_axis
 	.byte 0x3B
-	.byte \warpwalk_bank
-	.byte \warpwalk_map
-	.byte \warpwalk_warp
-	.hword \warpwalk_x_axis
-	.hword \warpwalk_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro warphole, warphole_bank, warphole_map
+.macro warphole, bank, map
 	.byte 0x3C
-	.byte \warphole_bank
-	.byte \warphole_map
+	.byte bank
+	.byte map
 .endmacro
 
-.macro warpteleport, warpteleport_bank, warpteleport_map, warpteleport_warp, warpteleport_x_axis, warpteleport_y_axis
+.macro warpteleport, bank, map, warp, x_axis, y_axis
 	.byte 0x3D
-	.byte \warpteleport_bank
-	.byte \warpteleport_map
-	.byte \warpteleport_warp
-	.hword \warpteleport_x_axis
-	.hword \warpteleport_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro warp3, warp3_bank, warp3_map, warp3_warp, warp3_x_axis, warp3_y_axis
+.macro warp3, bank, map, warp, x_axis, y_axis
 	.byte 0x3E
-	.byte \warp3_bank
-	.byte \warp3_map
-	.byte \warp3_warp
-	.hword \warp3_x_axis
-	.hword \warp3_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro setwarpplace, setwarpplace_bank, setwarpplace_map, setwarpplace_warp, setwarpplace_x_axis, setwarpplace_y_axis
+.macro setwarpplace, bank, map, warp, x_axis, y_axis
 	.byte 0x3F
-	.byte \setwarpplace_bank
-	.byte \setwarpplace_map
-	.byte \setwarpplace_warp
-	.hword \setwarpplace_x_axis
-	.hword \setwarpplace_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro warp4, warp4_bank, warp4_map, warp4_warp, warp4_x_axis, warp4_y_axis
+.macro warp4, bank, map, warp, x_axis, y_axis
 	.byte 0x40
-	.byte \warp4_bank
-	.byte \warp4_map
-	.byte \warp4_warp
-	.hword \warp4_x_axis
-	.hword \warp4_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro warp5, warp5_bank, warp5_map, warp5_warp, warp5_x_axis, warp5_y_axis
+.macro warp5, bank, map, warp, x_axis, y_axis
 	.byte 0x41
-	.byte \warp5_bank
-	.byte \warp5_map
-	.byte \warp5_warp
-	.hword \warp5_x_axis
-	.hword \warp5_y_axis
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x_axis
+	.hword y_axis
 .endmacro
 
-.macro getplayerpos, getplayerpos_x_var, getplayerpos_y_var
+.macro getplayerpos, x_var, y_var
 	.byte 0x42
-	.hword \getplayerpos_x_var
-	.hword \getplayerpos_y_var
+	.hword x_var
+	.hword y_var
 .endmacro
 
 .macro countpokemon
 	.byte 0x43
 .endmacro
 
-.macro additem, additem_index, additem_quantity
+.macro additem, index, quantity
 	.byte 0x44
-	.hword \additem_index
-	.hword \additem_quantity
+	.hword index
+	.hword quantity
 .endmacro
 
-.macro removeitem, removeitem_index, removeitem_quantity
+.macro removeitem, index, quantity
 	.byte 0x45
-	.hword \removeitem_index
-	.hword \removeitem_quantity
+	.hword index
+	.hword quantity
 .endmacro
 
-.macro checkitemroom, checkitemroom_index, checkitemroom_quantity
+.macro checkitemroom, index, quantity
 	.byte 0x46
-	.hword \checkitemroom_index
-	.hword \checkitemroom_quantity
+	.hword index
+	.hword quantity
 .endmacro
 
-.macro checkitem, checkitem_index, checkitem_quantity
+.macro checkitem, index, quantity
 	.byte 0x47
-	.hword \checkitem_index
-	.hword \checkitem_quantity
+	.hword index
+	.hword quantity
 .endmacro
 
-.macro checkitemtype, checkitemtype_index
+.macro checkitemtype, index
 	.byte 0x48
-	.hword \checkitemtype_index
+	.hword index
 .endmacro
 
-.macro addpcitem, addpcitem_index, addpcitem_quantity
+.macro addpcitem, index, quantity
 	.byte 0x49
-	.hword \addpcitem_index
-	.hword \addpcitem_quantity
+	.hword index
+	.hword quantity
 .endmacro
 
-.macro checkpcitem, checkpcitem_index, checkpcitem_quantity
+.macro checkpcitem, index, quantity
 	.byte 0x4A
-	.hword \checkpcitem_index
-	.hword \checkpcitem_quantity
+	.hword index
+	.hword quantity
 .endmacro
 
-.macro adddecoration, adddecoration_decoration
+.macro adddecoration, decoration
 	.byte 0x4B
-	.hword \adddecoration_decoration
+	.hword decoration
 .endmacro
 
-.macro removedecoration, removedecoration_decoration
+.macro removedecoration, decoration
 	.byte 0x4C
-	.hword \removedecoration_decoration
+	.hword decoration
 .endmacro
 
-.macro testdecoration, testdecoration_decoration
+.macro testdecoration, decoration
 	.byte 0x4D
-	.hword \testdecoration_decoration
+	.hword decoration
 .endmacro
 
-.macro checkdecoration, checkdecoration_decoration
+.macro checkdecoration, decoration
 	.byte 0x4E
-	.hword \checkdecoration_decoration
+	.hword decoration
 .endmacro
 
-.macro applymovement, applymovement_person_id, applymovement_pointer
+.macro applymovement, person_id, pointer
 	.byte 0x4F
-	.hword \applymovement_person_id
-	.word \applymovement_pointer
+	.hword person_id
+	.word pointer
 .endmacro
 
-.macro applymovementpos, applymovementpos_var, applymovementpos_pointer
+.macro applymovementpos, var, pointer
 	.byte 0x50
-	.hword \applymovementpos_var
-	.word \applymovementpos_pointer
+	.hword var
+	.word pointer
 .endmacro
 
-.macro waitmovement, waitmovement_index
+.macro waitmovement, index
 	.byte 0x51
-	.hword \waitmovement_index
+	.hword index
 .endmacro
 
-.macro waitmovementpos, waitmovementpos_index, waitmovementpos_x, waitmovementpos_y
+.macro waitmovementpos, index, x, y
 	.byte 0x52
-	.hword \waitmovementpos_index
-	.byte \waitmovementpos_x
-	.byte \waitmovementpos_y
+	.hword index
+	.byte x
+	.byte y
 .endmacro
 
-.macro hidesprite, hidesprite_param
+.macro hidesprite, param
 	.byte 0x53
-	.hword \hidesprite_param
+	.hword param
 .endmacro
 
-.macro hidespritepos, hidespritepos_index, hidespritepos_x, hidespritepos_y
+.macro hidespritepos, index, x, y
 	.byte 0x54
-	.hword \hidespritepos_index
-	.byte \hidespritepos_x
-	.byte \hidespritepos_y
+	.hword index
+	.byte x
+	.byte y
 .endmacro
 
 .macro faceplayer
 	.byte 0x5A
 .endmacro
 
-.macro trainerbattle0, trainerbattle0_type, trainerbattle0_index, trainerbattle0_filler, trainerbattle0_intro, trainerbattle0_loss
+.macro trainerbattle0, type, index, filler, intro, loss
 	.byte 0x5C
 	.byte 0x0
-	.hword \trainerbattle0_index
-	.hword \trainerbattle0_filler
-	.word \trainerbattle0_intro
-	.word \trainerbattle0_loss
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
 .endmacro
 
-.macro trainerbattle1, trainerbattle1_type, trainerbattle1_index, trainerbattle1_filler, trainerbattle1_intro, trainerbattle1_loss, trainerbattle1_extra
+.macro trainerbattle1, type, index, filler, intro, loss, extra
 	.byte 0x5C
 	.byte 0x1
-	.hword \trainerbattle1_index
-	.hword \trainerbattle1_filler
-	.word \trainerbattle1_intro
-	.word \trainerbattle1_loss
-	.word \trainerbattle1_extra
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
+	.word extra
 .endmacro
 
-.macro trainerbattle2, trainerbattle2_type, trainerbattle2_index, trainerbattle2_filler, trainerbattle2_intro, trainerbattle2_loss, trainerbattle2_extra
+.macro trainerbattle2, type, index, filler, intro, loss, extra
 	.byte 0x5C
 	.byte 0x2
-	.hword \trainerbattle2_index
-	.hword \trainerbattle2_filler
-	.word \trainerbattle2_intro
-	.word \trainerbattle2_loss
-	.word \trainerbattle2_extra
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
+	.word extra
 .endmacro
 
-.macro trainerbattle3, trainerbattle3_type, trainerbattle3_index, trainerbattle3_filler, trainerbattle3_intro
+.macro trainerbattle3, type, index, filler, intro
 	.byte 0x5C
 	.byte 0x3
-	.hword \trainerbattle3_index
-	.hword \trainerbattle3_filler
-	.word \trainerbattle3_intro
+	.hword index
+	.hword filler
+	.word intro
 .endmacro
 
-.macro trainerbattle4, trainerbattle4_type, trainerbattle4_index, trainerbattle4_filler, trainerbattle4_intro, trainerbattle4_loss, trainerbattle4_extra
+.macro trainerbattle4, type, index, filler, intro, loss, extra
 	.byte 0x5C
 	.byte 0x4
-	.hword \trainerbattle4_index
-	.hword \trainerbattle4_filler
-	.word \trainerbattle4_intro
-	.word \trainerbattle4_loss
-	.word \trainerbattle4_extra
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
+	.word extra
 .endmacro
 
-.macro trainerbattle5, trainerbattle5_type, trainerbattle5_index, trainerbattle5_filler, trainerbattle5_intro, trainerbattle5_loss
+.macro trainerbattle5, type, index, filler, intro, loss
 	.byte 0x5C
 	.byte 0x5
-	.hword \trainerbattle5_index
-	.hword \trainerbattle5_filler
-	.word \trainerbattle5_intro
-	.word \trainerbattle5_loss
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
 .endmacro
 
-.macro trainerbattle6, trainerbattle6_type, trainerbattle6_index, trainerbattle6_filler, trainerbattle6_intro, trainerbattle6_loss, trainerbattle6_extra, trainerbattle6_extra2
+.macro trainerbattle6, type, index, filler, intro, loss, extra, extra2
 	.byte 0x5C
 	.byte 0x6
-	.hword \trainerbattle6_index
-	.hword \trainerbattle6_filler
-	.word \trainerbattle6_intro
-	.word \trainerbattle6_loss
-	.word \trainerbattle6_extra
-	.word \trainerbattle6_extra2
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
+	.word extra
+	.word extra2
 .endmacro
 
-.macro trainerbattle7, trainerbattle7_type, trainerbattle7_index, trainerbattle7_filler, trainerbattle7_intro, trainerbattle7_loss, trainerbattle7_extra
+.macro trainerbattle7, type, index, filler, intro, loss, extra
 	.byte 0x5C
 	.byte 0x7
-	.hword \trainerbattle7_index
-	.hword \trainerbattle7_filler
-	.word \trainerbattle7_intro
-	.word \trainerbattle7_loss
-	.word \trainerbattle7_extra
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
+	.word extra
 .endmacro
 
-.macro trainerbattle8, trainerbattle8_type, trainerbattle8_index, trainerbattle8_filler, trainerbattle8_intro, trainerbattle8_loss, trainerbattle8_extra, trainerbattle8_extra2
+.macro trainerbattle8, type, index, filler, intro, loss, extra, extra2
 	.byte 0x5C
 	.byte 0x8
-	.hword \trainerbattle8_index
-	.hword \trainerbattle8_filler
-	.word \trainerbattle8_intro
-	.word \trainerbattle8_loss
-	.word \trainerbattle8_extra
-	.word \trainerbattle8_extra2
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
+	.word extra
+	.word extra2
 .endmacro
 
-.macro trainerbattle9, trainerbattle9_type, trainerbattle9_index, trainerbattle9_filler, trainerbattle9_intro, trainerbattle9_loss
+.macro trainerbattle9, type, index, filler, intro, loss
 	.byte 0x5C
 	.byte 0x9
-	.hword \trainerbattle9_index
-	.hword \trainerbattle9_filler
-	.word \trainerbattle9_intro
-	.word \trainerbattle9_loss
+	.hword index
+	.hword filler
+	.word intro
+	.word loss
 .endmacro
 
 .macro repeattrainerbattle
@@ -656,47 +661,47 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0x5F
 .endmacro
 
-.macro checktrainerflag, checktrainerflag_trainer
+.macro checktrainerflag, trainer
 	.byte 0x60
-	.hword \checktrainerflag_trainer
+	.hword trainer
 .endmacro
 
 ; XSE had it wrong, i'm correcting them
-.macro settrainerflag, settrainerflag_trainer
+.macro settrainerflag, trainer
 	.byte 0x61
-	.hword \settrainerflag_trainer
+	.hword trainer
 .endmacro
 
-.macro cleartrainerflag, cleartrainerflag_trainer
+.macro cleartrainerflag, trainer
 	.byte 0x62
-	.hword \cleartrainerflag_trainer
+	.hword trainer
 .endmacro
 
-.macro movesprite2, movesprite2_person, movesprite2_x, movesprite2_y
+.macro movesprite2, person, x, y
 	.byte 0x63
-	.hword \movesprite2_person
-	.hword \movepsrite2_x
-	.hword \movesprite2_y
+	.hword person
+	.hword x
+	.hword y
 .endmacro
 
-.macro moveoffscreen, moveoffscreen_person
+.macro moveoffscreen, person
 	.byte 0x64
-	.hword \moveoffscreen_person
+	.hword person
 .endmacro
 
-.macro spritebehave, spritebehave_person, spritebehave_behaviour
+.macro spritebehave, person, behaviour
 	.byte 0x65
-	.hword \spritebehave_person
-	.byte \spritebehave_behavior
+	.hword person
+	.byte behavior
 .endmacro
 
 .macro waitmsg
 	.byte 0x66
 .endmacro
 
-.macro preparemsg, preparemsg_text
+.macro preparemsg, text
 	.byte 0x67
-	.word \preparemsg_text
+	.word text
 .endmacro
 
 .macro closeonkeypress
@@ -723,181 +728,181 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0x6D
 .endmacro
 
-.macro yesnobox, yesnobox_x, yesnobox_y
+.macro yesnobox, x, y
 	.byte 0x6E
-	.byte \yesnobox_x
-	.byte \yesnobox_y
+	.byte x
+	.byte y
 .endmacro
 
-.macro multichoice, multichoice_x, multichoice_y, multichoice_list, multichoice_b_enabled
+.macro multichoice, x, y, list, b_enabled
 	.byte 0x6F
-	.byte \multichoice_x
-	.byte \multichoice_y
-	.byte \multichoice_list
-	.byte \multichoice_b_enabled
+	.byte x
+	.byte y
+	.byte list
+	.byte b_enabled
 .endmacro
 
-.macro multichoice2, multichoice2_x, multichoice2_y, multichoice2_list, multichoice2_default_pos, multichoice2_b_enabled
+.macro multichoice2, x, y, list, default_pos, b_enabled
 	.byte 0x70
-	.byte \multichoice2_x
-	.byte \multichoice2_y
-	.byte \multichoice2_list
-	.byte \multichoice2_default_pos
-	.byte \multichoice2_b_enabled
+	.byte x
+	.byte y
+	.byte list
+	.byte default_pos
+	.byte b_enabled
 .endmacro
 
-.macro multichoice3, multichoice3_x, multichoice3_y, multichoice3_list, multichoice3_item_per_row, multichoice3_b_enabled
+.macro multichoice3, x, y, list, item_per_row, b_enabled
 	.byte 0x71
-	.byte \multichoice3_x
-	.byte \multichoice3_y
-	.byte \multichoice3_list
-	.byte \multichoice3_items_per_row
-	.byte \multichoice3_b_enabled
+	.byte x
+	.byte y
+	.byte list
+	.byte items_per_row
+	.byte b_enabled
 .endmacro
 
-.macro showbox, showbox_left_pos, showbox_top_pos, showbox_width, showbox_height
+.macro showbox, left_pos, top_pos, width, height
 	.byte 0x72
-	.byte \showbox_left_pos
-	.byte \showbox_top_pos
-	.byte \showbox_width
-	.byte \showbox_height
+	.byte left_pos
+	.byte top_pos
+	.byte width
+	.byte height
 .endmacro
 
-.macro hidebox, hidebox_left_pos, hidebox_top_pos, hidebox_width, hidebox_height
+.macro hidebox, left_pos, top_pos, width, height
 	.byte 0x73
-	.byte \hidebox_left_pos
-	.byte \hidebox_top_pos
-	.byte \hidebox_width
-	.byte \hidebox_height
+	.byte left_pos
+	.byte top_pos
+	.byte width
+	.byte height
 .endmacro
 
-.macro clearbox, clearbox_left_pos, clearbox_top_pos, clearbox_width, clearbox_height
+.macro clearbox, left_pos, top_pos, width, height
 	.byte 0x74
-	.byte \clearbox_left_pos
-	.byte \clearbox_top_pos
-	.byte \clearbox_width
-	.byte \clearbox_height
+	.byte left_pos
+	.byte top_pos
+	.byte width
+	.byte height
 .endmacro
 
-.macro showpokepic, showpokepic_species, showpokepic_x, showpokepic_y
+.macro showpokepic, species, x, y
 	.byte 0x75
-	.hword \showpokepic_species
-	.byte \showpokepic_x
-	.byte \showpokepic_y
+	.hword species
+	.byte x
+	.byte y
 .endmacro
 
 .macro hidepokepic
 	.byte 0x76
 .endmacro
 
-.macro showcontestwinner, showcontestwinner_byte
+.macro showcontestwinner, byte
 	.byte 0x77
-	.byte \showcontestwinner_byte
+	.byte byte
 .endmacro
 
-.macro braille, braille_text
+.macro braille, text
 	.byte 0x78
-	.word \braille_text
+	.word text
 .endmacro
 
-.macro givepokemon, givepokemon_species, givepokemon_level, givepokemon_item, givepokemon_unknown1, givepokemon_unknown2, givepokemon_unknown3
+.macro givepokemon, species, level, item, unknown1, unknown2, unknown3
 	.byte 0x79
-	.hword \givepokemon_species
-	.byte \givepokemon_level
-	.hword \givepokemon_item
-	.word \givepokemon_unknown1
-	.word \givepokemon_unknown2
-	.byte \givepokemon_unknown3
+	.hword species
+	.byte level
+	.hword item
+	.word unknown1
+	.word unknown2
+	.byte unknown3
 .endmacro
 
-.macro giveegg, giveegg_species
+.macro giveegg, species
 	.byte 0x7A
-	.hword \giveegg_species
+	.hword species
 .endmacro
 
-.macro setpkmnpp, setpkmnpp_party_slot, setpkmnpp_attk_slot, setpkmnpp_amount
+.macro setpkmnpp, party_slot, attk_slot, amount
 	.byte 0x7B
-	.byte \setpkmnpp_party_slot
-	.byte \setpkmnpp_attk_slot
-	.byte \setpkmnpp_amount
+	.byte party_slot
+	.byte attk_slot
+	.byte amount
 .endmacro
 
-.macro checkattack, checkattack_attack
+.macro checkattack, attack
 	.byte 0x7C
-	.hword \checkattack_attack
+	.hword attack
 .endmacro
 
-.macro bufferpokemon, bufferpokemon_buffer, bufferpokemon_species
+.macro bufferpokemon, buffer, species
 	.byte 0x7D
-	.byte \bufferpokemon_buffer
-	.hword \bufferpokemon_species
+	.byte buffer
+	.hword species
 .endmacro
 
-.macro bufferfirstpokemon, bufferfirstpokemon_buffer
+.macro bufferfirstpokemon, buffer
 	.byte 0x7E
-	.byte \bufferfirstpokemon_buffer
+	.byte buffer
 .endmacro
 
-.macro bufferpartypokemon, bufferpartypokemon_buffer, bufferpartypokemon_slot
+.macro bufferpartypokemon, buffer, slot
 	.byte 0x7F
-	.byte \bufferpartypokemon_buffer
-	.hword \bufferpartypokemon_slot
+	.byte buffer
+	.hword slot
 .endmacro
 
-.macro bufferitem, bufferitem_buffer, bufferitem_item
+.macro bufferitem, buffer, item
 	.byte 0x80
-	.byte \bufferitem_buffer
-	.hword \bufferitem_item
+	.byte buffer
+	.hword item
 .endmacro
 
-.macro bufferdecoration, bufferdecoration_buffer, bufferdecoration_decoration
+.macro bufferdecoration, buffer, decoration
 	.byte 0x81
-	.byte \bufferdecoration_buffer
-	.hword \bufferdecoration_decoration
+	.byte buffer
+	.hword decoration
 .endmacro
 
-.macro bufferattack, bufferattack_buffer, bufferattack_attack
+.macro bufferattack, buffer, attack
 	.byte 0x82
-	.byte \bufferattack_buffer
-	.hword \bufferattack_attack
+	.byte buffer
+	.hword attack
 .endmacro
 
-.macro buffernumber, buffernumber_buffer, buffernumber_number
+.macro buffernumber, buffer, number
 	.byte 0x83
-	.byte \buffernumber_buffer
-	.hword \buffernumber_number
+	.byte buffer
+	.hword number
 .endmacro
 
-.macro bufferstd, bufferstd_buffer, bufferstd_string
+.macro bufferstd, buffer, string
 	.byte 0x84
-	.byte \bufferstd_buffer
-	.hword \bufferstd_string
+	.byte buffer
+	.hword string
 .endmacro
 
-.macro bufferstring, bufferstring_buffer, bufferstring_pointer
+.macro bufferstring, buffer, pointer
 	.byte 0x85
-	.byte \bufferstring_buffer
-	.hword \bufferstring_pointer
+	.byte buffer
+	.hword pointer
 .endmacro
 
-.macro pokemart, pokemart_pointer
+.macro pokemart, pointer
 	.byte 0x86
-	.word \pokemart_pointer
+	.word pointer
 .endmacro
 
-.macro pokemart2, pokemart2_pointer
+.macro pokemart2, pointer
 	.byte 0x87
-	.word \pokemart2_pointer
+	.word pointer
 .endmacro
 
-.macro pokemart3, pokemart3_pointer
+.macro pokemart3, pointer
 	.byte 0x88
-	.word \pokemart3_pointer
+	.word pointer
 .endmacro
 
-.macro pokecasino, pokecasino_param1
+.macro pokecasino, param1
 	.byte 0x89
-	.hword \pokecasino_param1
+	.hword param1
 .endmacro
 
 .macro cmd8A
@@ -920,196 +925,196 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0x8E
 .endmacro
 
-.macro random, random_limit
+.macro random, limit
 	.byte 0x8F
-	.hword \random_limit
+	.hword limit
 .endmacro
 
-.macro givemoney, givemoney_value, givemoney_byte
+.macro givemoney, value, byte
 	.byte 0x90
-	.word \givemoney_value
-	.byte \givemoney_byte
+	.word value
+	.byte byte
 .endmacro
 
-.macro paymoney, paymoney_value, paymoney_byte
+.macro paymoney, value, byte
 	.byte 0x91
-	.word \paymoney_value
-	.byte \paymoney_byte
+	.word value
+	.byte byte
 .endmacro
 
-.macro checkmoney, checkmoney_value, checkmoney_byte
+.macro checkmoney, value, byte
 	.byte 0x92
-	.word \checkmoney_value
-	.byte \checkmoney_byte
+	.word value
+	.byte byte
 .endmacro
 
-.macro showmoney, showmoney_x, showmoney_y
+.macro showmoney, x, y
 	.byte 0x93
-	.byte \showmoney_x
-	.byte \showmoney_y
+	.byte x
+	.byte y
 .endmacro
 
-.macro hidemoney, hidemoney_x, hidemoney_y
+.macro hidemoney, x, y
 	.byte 0x94
-	.byte \hidemoney_x
-	.byte \hidemoney_y
+	.byte x
+	.byte y
 .endmacro
 
-.macro updatemoney, updatemoney_x, updatemoney_y
+.macro updatemoney, x, y
 	.byte 0x95
-	.byte \updatemoney_x
-	.byte \updatemoney_y
+	.byte x
+	.byte y
 .endmacro
 
 .macro cmd96
 	.byte 0x96
 .endmacro
 
-.macro fadescreen, fadescreen_effect
+.macro fadescreen, effect
 	.byte 0x97
-	.byte \fadescreen_effect
+	.byte effect
 .endmacro
 
-.macro fadescreendelay, fadescreendelay_effect, fadescreendelay_time
+.macro fadescreendelay, effect, time
 	.byte 0x98
-	.byte \fadescreendelay_effect
-	.byte \fadescreendelay_time
+	.byte effect
+	.byte time
 .endmacro
 
-.macro darken, darken_size
+.macro darken, size
 	.byte 0x99
-	.hword \darken_size
+	.hword size
 .endmacro
 
-.macro lighten, lighten_size
+.macro lighten, size
 	.byte 0x9A
-	.byte \lighten_size
+	.byte size
 .endmacro
 
 .macro preparmsg2, preparemsg2_pointer
 	.byte 0x9B
-	.word \preparemsg2_pointer
+	.word pointer
 .endmacro
 
-.macro doanimation, doanimation_param
+.macro doanimation, param
 	.byte 0x9C
-	.hword \doanimation_param
+	.hword param
 .endmacro
 
-.macro setanimation, setanimation_anim, setanimation_slot
+.macro setanimation, anim, slot
 	.byte 0x9D
-	.byte \setanimation_anim
-	.hword \setanimation_slot
+	.byte anim
+	.hword slot
 .endmacro
 
-.macro checkanimation, checkanimation_param
+.macro checkanimation, param
 	.byte 0x9E
-	.hword \checkanimation_param
+	.hword param
 .endmacro
 
-.macro sethealingplace, sethealingplace_param
+.macro sethealingplace, param
 	.byte 0x9F
-	.hword \sethealingplace_param
+	.hword param
 .endmacro
 
 .macro checkgender
 	.byte 0xA0
 .endmacro
 
-.macro cry, cry_species, cry_effect
+.macro cry, species, effect
 	.byte 0xA1
-	.hword \cry_species
-	.hword \cry_effect
+	.hword species
+	.hword effect
 .endmacro
 
-.macro setmaptile, setmaptile_x, setmaptile_y, setmaptile_tile, setmaptile_attrib
+.macro setmaptile, x, y, tile, attrib
 	.byte 0xA2
-	.hword \setmaptile_x
-	.hword \setmaptile_y
-	.hword \setmaptile_tile
-	.hword \setmaptile_attrib
+	.hword x
+	.hword y
+	.hword tile
+	.hword attrib
 .endmacro
 
 .macro resetweather
 	.byte 0xA3
 .endmacro
 
-.macro setweather, setweather_type
+.macro setweather, type
 	.byte 0xA4
-	.hword \setweather_type
+	.hword type
 .endmacro
 
 .macro doweather
 	.byte 0xA5
 .endmacro
 
-.macro cmdA6, cmdA6_byte
+.macro cmdA6, byte
 	.byte 0xA6
-	.byte \cmdA6_byte
+	.byte byte
 .endmacro
 
-.macro setmapfooter, setmapfooter_param
+.macro setmapfooter, param
 	.byte 0xA7
-	.hword \setmapfooter_param
+	.hword param
 .endmacro
 
-.macro spritelevelup, spritelevelup_person, spritelevelup_bank, spritelevelup_map, spritelevelup_unknown
+.macro spritelevelup, person, bank, map, unknown
 	.byte 0xA8
-	.hword \spritelevelup_person
-	.byte \spritelevelup_bank
-	.byte \spritelevelup_map
-	.byte \spritelevelup_unknown
+	.hword person
+	.byte bank
+	.byte map
+	.byte unknown
 .endmacro
 
-.macro restorespritelevel, restorespritelevel_person, restorespritelevel_bank, restorespritelevel_map
+.macro restorespritelevel, person, bank, map
 	.byte 0xA9
-	.hword \restorespritelevel_person
-	.byte \restorespritelevel_bank
-	.byte \restorespritelevel_map
+	.hword person
+	.byte bank
+	.byte map
 .endmacro
 
-.macro createsprite, createsprite_sprite, createsprite_person, createsprite_x, createsprite_y, createsprite_behave, createsprite_face
+.macro createsprite, sprite, person, x, y, behave, face
 	.byte 0xAA
-	.byte \createsprite_sprite
-	.byte \createsprite_person
-	.hword \createsprite_x
-	.hword \createsprite_y
-	.byte \createsprite_behave
-	.byte \createsprite_face
+	.byte sprite
+	.byte person
+	.hword x
+	.hword y
+	.byte behave
+	.byte face
 .endmacro
 
-.macro spriteface2, spriteface2_person, spriteface2_face
+.macro spriteface2, person, face
 	.byte 0xAB
-	.byte \spriteface2_person
-	.byte \spriteface2_face
+	.byte person
+	.byte face
 .endmacro
 
-.macro setdooropened, setdooropened_x, setdooropened_y
+.macro setdooropened, x, y
 	.byte 0xAC
-	.hword \setdooropened_x
-	.hword \setdooropened_y
+	.hword x
+	.hword y
 .endmacro
 
-.macro setdoorclosed, setdoorclosed_x, setdoorclosed_y
+.macro setdoorclosed, x, y
 	.byte 0xAD
-	.hword \setdoorclosed_x
-	.hword \setdoorclosed_y
+	.hword x
+	.hword y
 .endmacro
 
 .macro doorchange
 	.byte 0xAE
 .endmacro
 
-.macro setdooropened2, setdooropened2_x, setdooropened2_y
+.macro setdooropened2, x, y
 	.byte 0xAF
-	.hword \setdooropened2_x
-	.hword \setdooropened2_y
+	.hword x
+	.hword y
 .endmacro
 
-.macro setdoorclosed2, setdoorclosed2_x, setdoorclosed2_y
+.macro setdoorclosed2, x, y
 	.byte 0xB0
-	.hword \setdoorclosed2_x
-	.hword \setdoorclosed2_y
+	.hword x
+	.hword y
 .endmacro
 
 .macro cmdB1
@@ -1120,125 +1125,125 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0xB2
 .endmacro
 
-.macro checkcoins, checkcoins_var
+.macro checkcoins, var
 	.byte 0xB3
-	.hword \checkcoins_var
+	.hword var
 .endmacro
 
-.macro givecoins, givecoins_param
+.macro givecoins, param
 	.byte 0xB4
-	.hword \givecoins_param
+	.hword param
 .endmacro
 
-.macro removecoins, removecoins_param
+.macro removecoins, param
 	.byte 0xB5
-	.hword \removecoins_param
+	.hword param
 .endmacro
 
-.macro setwildbattle, setwildbattle_species, setwildbattle_level, setwildbattle_item
+.macro setwildbattle, species, level, item
 	.byte 0xB6
-	.hword \setwildbattle_species
-	.byte \setwildbattle_level
-	.hword \setwildbattle_item
+	.hword species
+	.byte level
+	.hword item
 .endmacro
 
 .macro dowildbattle
 	.byte 0xB7
 .endmacro
 
-.macro setvirtualaddress, setvirtualaddress_param
+.macro setvirtualaddress, param
 	.byte 0xB8
-	.word \setvirtualaddress_param
+	.word param
 .endmacro
 
-.macro virtualgoto, virtualgoto_pointer
+.macro virtualgoto, pointer
 	.byte 0xB9
-	.word \virtualgoto_pointer
+	.word pointer
 .endmacro
 
-.macro virtualcall, virtualcall_pointer
+.macro virtualcall, pointer
 	.byte 0xBA
-	.word \virtualcall_pointer
+	.word pointer
 .endmacro
 
-.macro virtualgotoif, virtualgotoif_condition, virtualgotoif_pointer
+.macro virtualgotoif, condition, pointer
 	.byte 0xBB
-	.byte \virtualgotoif_condition
-	.word \virtualgotoif_pointer
+	.byte condition
+	.word pointer
 .endmacro
 
-.macro virtualcallif, virtualcallif_condition, virtualcallif_pointer
+.macro virtualcallif, condition, pointer
 	.byte 0xBC
-	.byte \virtualcallif_condition
-	.word \virtualcallif_pointer
+	.byte condition
+	.word pointer
 .endmacro
 
-.macro virtualmsgbox, virtualmsgbox_text
+.macro virtualmsgbox, text
 	.byte 0xBD
-	.word \virtualmsgbox_text
+	.word text
 .endmacro
 
-.macro virtualloadpointer, virtualloadpointer_pointer
+.macro virtualloadpointer, pointer
 	.byte 0xBE
-	.word \virtualloadpointer_pointer
+	.word pointer
 .endmacro
 
-.macro virtualbuffer, virtualbuffer_buffer, virtualbuffer_pointer
+.macro virtualbuffer, buffer, pointer
 	.byte 0xBF
-	.byte \virtualbuffer_buffer
-	.word \virtualbuffer_pointer
+	.byte buffer
+	.word pointer
 .endmacro
 
-.macro showcoins, showcoins_x, showcoins_y
+.macro showcoins, x, y
 	.byte 0xC0
-	.byte \showcoins_x
-	.byte \showcoins_y
+	.byte x
+	.byte y
 .endmacro
 
-.macro hidecoins, hidecoins_x, hidecoins_y
+.macro hidecoins, x, y
 	.byte 0xC1
-	.byte \hidecoins_x
-	.byte \hidecoins_y
+	.byte x
+	.byte y
 .endmacro
 
-.macro updatecoins, updatecoins_x, updatecoins_y
+.macro updatecoins, x, y
 	.byte 0xC2
-	.byte \updatecoins_x
-	.byte \updatecoins_y
+	.byte x
+	.byte y
 .endmacro
 
-.macro cmdC3, cmdC3_hidden_var
+.macro cmdC3, hidden_var
 	.byte 0xC3
-	.hword \cmdC3_hidden_var
+	.hword hidden_var
 .endmacro
 
-.macro warp6, warp6_bank, warp6_map, warp6_warp, warp6_x, warp6_y
+.macro warp6, bank, map, warp, x, y
 	.byte 0xC4
-	.byte \warp6_bank
-	.byte \warp6_map
-	.byte \warp6_warp
-	.hword \warp6_x
-	.hword \warp6_y
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x
+	.hword y
 .endmacro
 
 .macro waitcry
 	.byte 0xC5
 .endmacro
 
-.macro bufferboxname, bufferboxname_buffer, bufferboxname_box
+.macro bufferboxname, buffer, box
 	.byte 0xC6
-	.byte \bufferboxname_buffer
-	.hword \bufferboxname_box
+	.byte buffer
+	.hword box
 .endmacro
 
-.macro textcolor, textcolor_byte
+.macro textcolor, byte
 	.byte 0xC7
-	.byte \textcolor_byte
+	.byte byte
 .endmacro
 
-.macro cmdC8, cmdC8_param
+.macro cmdC8, param
 	.byte 0xC8
-	.word \cmdC8_param
+	.word param
 .endmacro
 
 .macro cmdC9
@@ -1253,50 +1258,50 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0xCB
 .endmacro
 
-.macro comparehiddenvar, comparehiddenvar_byte, comparehiddenvar_value
+.macro comparehiddenvar, byte, value
 	.byte 0xCC
-	.byte \comparehiddenvar_byte
-	.word \comparehiddenvar_value
+	.byte byte
+	.word value
 .endmacro
 
-.macro setobedience, setobedience_slot
+.macro setobedience, slot
 	.byte 0xCD
-	.hword \setobedience_slot
+	.hword slot
 .endmacro
 
-.macro checkobedience, checkobedience_slot
+.macro checkobedience, slot
 	.byte 0xCE
-	.hword \checkobedience_slot
+	.hword slot
 .endmacro
 
 .macro executeram
 	.byte 0xCF
 .endmacro
 
-.macro setworldmapflag, setworldmapflag_param
+.macro setworldmapflag, param
 	.byte 0xD0
-	.hword \setworldmapflag_param
+	.hword param
 .endmacro
 
 .macro warpteleport2
 	.byte 0xD1
 .endmacro
 
-.macro setcatchlocation, setcatchlocation_slot, setcatchlocation_map
+.macro setcatchlocation, slot, map
 	.byte 0xD2
-	.hword \setcatchlocation_slot
-	.byte \setcatchlocation_map
+	.hword slot
+	.byte map
 .endmacro
 
-.macro braille2, braille2_text
+.macro braille2, text
 	.byte 0xD3
-	.word \braille2_text
+	.word text
 .endmacro
 
-.macro bufferitems, bufferitems_buffer, bufferitems_item, bufferitems_amount
-	.byte \bufferitems_buffer
-	.hword \bufferitems_item
-	.hword \bufferitems_amount
+.macro bufferitems, buffer, item, amount
+	.byte buffer
+	.hword item
+	.hword amount
 .endmacro
 
 .macro cmdD5
@@ -1307,13 +1312,13 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0xD6
 .endmacro
 
-.macro warp7, warp7_bank, warp7_map, warp7_warp, warp7_x, warp7_y
+.macro warp7, bank, map, warp, x, y
 	.byte 0xD7
-	.byte \warp7_bank
-	.byte \warp7_map
-	.byte \warp7_warp
-	.hword \warp7_x
-	.hword \warp7_y
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x
+	.hword y
 .endmacro
 
 .macro cmdD8
@@ -1328,53 +1333,51 @@ notequal       equ 5 ; A is not equal to B
 	.byte 0xDA
 .endmacro
 
-.macro preparemsg3, preparemsg3_pointer
+.macro preparemsg3, pointer
 	.byte 0xDB
-	.word \preparemsg3_pointer
+	.word pointer
 .endmacro
 
-.macro fadescreen3, fadescreen3_param
+.macro fadescreen3, param
 	.byte 0xDC
-	.byte \fadescreen3_param
+	.byte param
 .endmacro
 
-.macro buffertrainerclass, buffertrainerclass_buffer, buffertrainerclass_class
+.macro buffertrainerclass, buffer, class
 	.byte 0xDD
-	.byte \buffertrainerclass_buffer
-	.hword \buffertrainerclass_class
+	.byte buffer
+	.hword class
 .endmacro
 
-.macro buffertrainername, buffertrainername_buffer, buffertrainername_trainer
+.macro buffertrainername, buffer, trainer
 	.byte 0xDE
-	.byte \buffertrainername_buffer
-	.hword \buffertrainername_trainer
+	.byte buffer
+	.hword trainer
 .endmacro
 
-.macro pokenavcall, pokenavcall_text
+.macro pokenavcall, text
 	.byte 0xDF
-	.word \pokenavcall_text
+	.word text
 .endmacro
 
-.macro warp8, warp8_bank, warp8_map, warp8_warp, warp8_x, warp8_y
+.macro warp8, bank, map, warp, x, y
 	.byte 0xE0
-	.byte \warp8_bank
-	.byte \warp8_map
-	.byte \warp8_warp
-	.hword \warp8_x
-	.hword \warp8_y
+	.byte bank
+	.byte map
+	.byte warp
+	.hword x
+	.hword y
 .endmacro
 
-.macro buffercontesttype, buffercontesttype_param1, buffercontesttype_param2
+.macro buffercontesttype, param1, param2
 	.byte 0xE1
-	.byte \buffercontesttype_param1
-	.hword \buffercontesttype_param2
+	.byte param1
+	.hword param2
 .endmacro
 
-.macro bufferitems2, bufferitems2_buffer, bufferitems2_item, bufferitems2_amount
+.macro bufferitems2, buffer, item, amount
 	.byte 0xE2
-	.byte \bufferitems2_buffer
-	.hword \bufferitems2_item
-	.hword \bufferitems2_amount
+	.byte buffer
+	.hword item
+	.hword amount
 .endmacro
-
-.close
