@@ -50,11 +50,8 @@ BOBBO equ 1
 To write text:
 ```
 	.table "defines/charmap.txt"
-	text "BOBBO: bobbo.\p"
-	text "It looks tired.$"
+	.str "BOBBO: bobbo.\p", "It looks tired."
 ```
-
-`.thumb` is required at the top of every .asm file, and `.close` is needed at the end of every .asm file.
 
 ### DATA TYPES
 - `.byte`: 8 bits.
