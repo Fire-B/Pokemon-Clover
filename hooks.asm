@@ -1,6 +1,22 @@
 .thumb
 
+.include "scripts/script_main.asm"
+
+rom_area  equ 0x08000000
+
 ; This file will be used for hooks, bug fixes, and repoints.
+
+.org 0x2548EB
+kengeon_ability_2:
+  .byte 0x30
+
+.org 0x7CF308
+pointer_to_old_man_in_vitlier1:
+  .word vitlier_old_man_face_right + rom_area
+
+.org 0x839C20
+pointer_to_old_man_in_vitlier2:
+  .word vitlier_old_man_face_right + rom_area
 
 .org 0x905360
 clear_smog_battle_script_1:
