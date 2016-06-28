@@ -96,14 +96,8 @@ Each map header is 28 bytes long.
 ### MAP FOOTER
 
 ```
-byte	Width
-byte	Filler, 0x0
-byte	Filler, 0x0
-byte	Filler, 0x0
-byte	Height
-byte	Filler, 0x0
-byte	Filler, 0x0
-byte	Filler, 0x0
+word	Width
+word	Height
 word	Pointer to border data
 word	Pointer to map data
 word	Pointer to first tileset
