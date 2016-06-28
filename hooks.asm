@@ -17,7 +17,7 @@ animango_event_struct:
   .byte 0x0
   .byte 0x8
   .word 0x083B565C
-  .word animangocity_warp_struct + rom_area
+  .word animango_outside_warp_struct + rom_area
   .word 0x0
   .word 0x083B582C
 
