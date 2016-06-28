@@ -10,6 +10,17 @@ rom_area  equ 0x08000000
 kengeon_ability_2:
   .byte 0x30
 
+.org 0x3B5898
+animango_event_struct:
+  .byte 0xD
+  .byte 0xD
+  .byte 0x0
+  .byte 0x8
+  .word 0x083B565C
+  .word animangocity_warp_struct + rom_area
+  .word 0x0
+  .word 0x083B582C
+
 .org 0x7CF308
 pointer_to_old_man_in_vitlier1:
   .word vitlier_old_man_face_right + rom_area
